@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,21 +8,23 @@
     <script src="https://alcdn.msauth.net/browser/2.32.2/js/msal-browser.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
     <div class="container">
         <div class="logo">
             <img src="logo.svg" alt="INCAS Telemetrix" class="logo-image">
             <div class="logo-subtitle">Telemetrix</div>
         </div>
-        
+
         <div class="login-card">
             <h1 class="login-title">DASHBOARD LOGIN</h1>
-            
+
             <div id="status" class="status-message">Loading...</div>
-            
+
             <div class="auth-buttons">
                 <button id="loginBtn" onclick="login()" class="login-btn" style="display:none;">
                     Sign In with Microsoft
@@ -29,11 +32,8 @@
                 <button id="logoutBtn" onclick="logout()" class="logout-btn" style="display:none;">
                     Sign Out
                 </button>
-                <button id="testApiBtn" onclick="testApi()" class="test-btn" style="display:none;">
-                    Test API Connection
-                </button>
             </div>
-            
+
             <div id="results" class="results-section"></div>
         </div>
     </div>
@@ -51,7 +51,7 @@
         const myMSALObj = new msal.PublicClientApplication(msalConfig);
 
         const loginRequest = {
-            scopes: ["758ff3e9-e6bd-4838-90d0-50cf3ec88387/access_as_user"]
+            scopes: ["758ff3e9-e6bd-4838-90d0-50cf3ec88387/.default"]
         };
 
         let account = null;
@@ -70,7 +70,6 @@
             const statusDiv = document.getElementById('status');
             const loginBtn = document.getElementById('loginBtn');
             const logoutBtn = document.getElementById('logoutBtn');
-            const testApiBtn = document.getElementById('testApiBtn');
 
             if (account) {
                 statusDiv.innerHTML = `
@@ -84,7 +83,6 @@
                 `;
                 loginBtn.style.display = 'none';
                 logoutBtn.style.display = 'inline-block';
-                testApiBtn.style.display = 'inline-block';
             } else {
                 statusDiv.innerHTML = `
                     <div class="auth-prompt">
@@ -94,7 +92,6 @@
                 `;
                 loginBtn.style.display = 'inline-block';
                 logoutBtn.style.display = 'none';
-                testApiBtn.style.display = 'none';
             }
         }
 
@@ -137,7 +134,7 @@
 
             try {
                 const tokenRequest = {
-                    scopes: ["758ff3e9-e6bd-4838-90d0-50cf3ec88387/access_as_user"],
+                    scopes: ["758ff3e9-e6bd-4838-90d0-50cf3ec88387/.default"],
                     account: account
                 };
 
@@ -148,7 +145,7 @@
 
                 // Test API call with better error handling
                 const apiUrl = 'https://incas-functions-dev-b8djeyakc7d0hwa3.australiasoutheast-01.azurewebsites.net/api/GetCurrentStatus';
-                
+
                 try {
                     const apiResponse = await fetch(apiUrl, {
                         method: 'GET',
@@ -255,4 +252,5 @@
         }
     </script>
 </body>
+
 </html>
