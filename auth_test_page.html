@@ -60,6 +60,22 @@
             } else {
                 account = myMSALObj.getAllAccounts()[0];
             }
+
+            // If user is already authenticated, redirect to dashboard immediately
+            if (account) {
+                document.getElementById('status').innerHTML = `
+                    <div class="loading-message">
+                        <div class="loading-icon">🔄</div>
+                        <div class="loading-text">Already authenticated. Redirecting to dashboard...</div>
+                    </div>
+                `;
+                
+                setTimeout(() => {
+                    window.location.href = "https://incasrod.github.io/telemetrix/dashboard.html";
+                }, 1000);
+                return;
+            }
+
             updateUI();
         });
 
