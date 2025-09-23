@@ -482,14 +482,17 @@
             useEffect(() => {
                 if (accessToken) {
                     fetchMachineData();
-                    const interval = setInterval(fetchMachineData, 10000); // Update every 10 seconds
+                    const interval = setInterval(fetchMachineData, 13000); // Update every 10 seconds
                     return () => clearInterval(interval);
                 }
             }, [accessToken]);
 
             const handleLogout = async () => {
                 try {
-                    // Clear the local session only (don't logout from Microsoft)
+                    // Set a flag to indicate intentional logout
+                    sessionStorage.setItem('intentionalLogout', 'true');
+                    
+                    // Clear the local session
                     myMSALObj.setActiveAccount(null);
                     
                     // Clear all accounts from MSAL cache
@@ -498,11 +501,15 @@
                         myMSALObj.removeAccount(account);
                     });
                     
+                    // Clear any stored tokens
+                    sessionStorage.removeItem('authSuccess');
+                    localStorage.clear();
+                    
                     // Redirect to login page
                     window.location.href = "https://incasrod.github.io/telemetrix/auth_test_page.html";
                 } catch (error) {
                     console.error('Logout error:', error);
-                    // Force redirect even if there's an error
+                    sessionStorage.setItem('intentionalLogout', 'true');
                     window.location.href = "https://incasrod.github.io/telemetrix/auth_test_page.html";
                 }
             };
