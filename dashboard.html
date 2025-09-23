@@ -176,7 +176,7 @@
         .gauge-container {
             position: relative;
             width: 200px;
-            height: 200px;
+            height: 120px;
             margin: 2rem auto;
         }
 
@@ -489,12 +489,20 @@
 
             const handleLogout = async () => {
                 try {
-                    await myMSALObj.logoutPopup({
-                        account: user,
-                        postLogoutRedirectUri: "https://incasrod.github.io/telemetrix/auth_test_page.html"
+                    // Clear the local session only (don't logout from Microsoft)
+                    myMSALObj.setActiveAccount(null);
+                    
+                    // Clear all accounts from MSAL cache
+                    const accounts = myMSALObj.getAllAccounts();
+                    accounts.forEach(account => {
+                        myMSALObj.removeAccount(account);
                     });
+                    
+                    // Redirect to login page
+                    window.location.href = "https://incasrod.github.io/telemetrix/auth_test_page.html";
                 } catch (error) {
                     console.error('Logout error:', error);
+                    // Force redirect even if there's an error
                     window.location.href = "https://incasrod.github.io/telemetrix/auth_test_page.html";
                 }
             };
@@ -559,4 +567,3 @@
     </script>
 </body>
 </html>
-
