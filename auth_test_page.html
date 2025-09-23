@@ -61,6 +61,15 @@
                 account = myMSALObj.getAllAccounts()[0];
             }
 
+            // Check if this is an intentional logout - if so, don't auto-redirect
+            const intentionalLogout = sessionStorage.getItem('intentionalLogout');
+            if (intentionalLogout) {
+                sessionStorage.removeItem('intentionalLogout');
+                account = null; // Force user to log in again
+                updateUI();
+                return;
+            }
+
             // If user is already authenticated, redirect to dashboard immediately
             if (account) {
                 document.getElementById('status').innerHTML = `
