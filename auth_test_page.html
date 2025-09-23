@@ -42,6 +42,10 @@
                 clientId: "758ff3e9-e6bd-4838-90d0-50cf3ec88387",
                 authority: "https://login.microsoftonline.com/common",
                 redirectUri: "https://incasrod.github.io/telemetrix/auth_test_page.html"
+            },
+            cache: {
+                cacheLocation: "sessionStorage", // This helps with popup issues
+                storeAuthStateInCookie: false
             }
         };
 
@@ -130,7 +134,16 @@
                 // Clear any previous errors
                 document.getElementById('results').innerHTML = '';
 
-                const response = await myMSALObj.loginPopup(loginRequest);
+                // Use loginPopup with better configuration
+                const response = await myMSALObj.loginPopup({
+                    ...loginRequest,
+                    prompt: 'select_account', // Always show account selection
+                    loginHint: undefined, // Don't pre-fill any account
+                    extraQueryParameters: {
+                        'login_hint': undefined
+                    }
+                });
+                
                 account = response.account;
                 
                 // Show success message briefly before redirect
@@ -141,7 +154,10 @@
                     </div>
                 `;
 
-                // Redirect immediately to dashboard
+                // Clear any cached redirect states
+                sessionStorage.removeItem('msal.interaction.status');
+                
+                // Redirect to dashboard
                 setTimeout(() => {
                     window.location.href = "https://incasrod.github.io/telemetrix/dashboard.html";
                 }, 1000);
